@@ -47,3 +47,16 @@ def relu(Z):
 	assert(A.shape == Z.shape)
 	cache = Z
 	return A, cache
+
+def model_forward(X, parameters):
+	caches = []
+	A = X
+	layers = len(parameters) // 2
+	for layer in range(1, layers):
+		A_pre = A
+		A, cache= linear_activation_forward(A_pre, parameters["W"+str(layer)], parameters["b"+str(layer)], "relu")
+		caches.append(cache)
+	AL, cache = linear_activation_forward(A, parameters["W"+str(layers)], parameters["b"+str(layers)], "sigmoid")
+	caches.append(cache)
+	assert(AL.shape == (1,X.shape[1]))
+	return AL, caches
