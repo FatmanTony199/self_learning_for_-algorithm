@@ -36,3 +36,14 @@ def linear_activation_forward(A_pre, W, b, activation):
 	cache = (linear_cache, activation_cache)
 	assert (A.shape == (W.shape[0], A_pre.shape[1]))
 	return A, cache
+
+def sigmoid(Z):
+	A = 1 / (1+np.exp(-Z))
+	cache = Z
+	return A, cache
+
+def relu(Z):
+	A = np.maximum(0,Z)
+	assert(A.shape == Z.shape)
+	cache = Z
+	return A, cache
