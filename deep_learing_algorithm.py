@@ -60,3 +60,12 @@ def model_forward(X, parameters):
 	caches.append(cache)
 	assert(AL.shape == (1,X.shape[1]))
 	return AL, caches
+
+
+def compute_cost(AL, Y, parameters):
+    m = Y.shape[1]
+    layers = len(parameters) // 2
+    cost = np.sum(-Y*np.log(AL) - (1-Y)*np.log(1-AL))/m
+    cost = np.squeeze(cost)
+    assert(cost.shape == ())
+    return cost
