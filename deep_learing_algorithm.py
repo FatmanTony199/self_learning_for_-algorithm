@@ -69,3 +69,40 @@ def compute_cost(AL, Y, parameters):
     cost = np.squeeze(cost)
     assert(cost.shape == ())
     return cost
+
+def linear_backward(dZ, cache):
+
+	A_pre, W, b = cache
+	m = dZ.shape[1]
+	dW = np.dot(dZ,cache[0].T)/m
+	db = np.sum(dZ, axis = 1, keepdims = True)/m
+	dA_pre = np.dot(cache[1].T,dZ)
+	assert(A_pre.shape == dA_pre.shape)
+	assert(W.shape == dW.shape)
+	assert(b.shape == db.shape)
+	return dA_pre, dW, db
+
+def linear_activation_backward(dA, cache, activation):
+
+	linear_cache, activation_cache = cache
+	if activation == "sigmoid":
+		dZ = sigmoid_backward(dA, activation_cache)
+		dA_pre, dW, db = linear_backward(dZ, linear_cache)
+	elif activation == "relu":
+		dZ = relu_backward(dA, activation_cache)
+		dA_pre, dW, db = linear_backward(dZ, linear_cache)
+	return dA_pre, dW, db
+
+def sigmoid_backward(dA, cache):
+    Z = cache
+    s = 1/(1+np.exp(-Z))
+    dZ = dA * s * (1-s)
+    assert (dZ.shape == Z.shape)
+    return dZ
+
+def relu_backward(dA, cache):
+    Z = cache
+    dZ = np.array(dA, copy=True)
+    dZ[Z <= 0] = 0 
+    assert (dZ.shape == Z.shape)
+    return dZ
