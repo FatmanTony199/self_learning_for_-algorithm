@@ -125,3 +125,10 @@ def model_backforward(AL, Y, caches, parameters):
 			linear_activation_backward(grads["dA"+str(layer+1)], current_cache, "relu")
         
 	return grads
+
+def update_parameters(parameters, grads, learning_rate):
+	layers = len(parameters)//2
+	for layer in range(layers):
+		parameters["W"+str(layer+1)] = parameters["W"+str(layer+1)] - learning_rate*grads["dW"+str(layer+1)]
+		parameters["b"+str(layer+1)] = parameters["b"+str(layer+1)] - learning_rate*grads["db"+str(layer+1)]
+	return parameters
