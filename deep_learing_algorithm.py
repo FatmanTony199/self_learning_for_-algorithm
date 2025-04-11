@@ -106,3 +106,22 @@ def relu_backward(dA, cache):
     dZ[Z <= 0] = 0 
     assert (dZ.shape == Z.shape)
     return dZ
+
+def model_backforward(AL, Y, caches, parameters):
+
+	grads = {}
+	m = AL.shape[1]
+	Y = Y.reshape(AL.shape) 
+	layers = len(caches)
+	dAL = -(np.divide(Y,AL)-np.divide(1-Y,1-AL))
+	current_cache = caches[layers-1] 
+
+	grads["dA"+str(layers-1)], grads["dW"+str(layers)], grads["db"+str(layers)] = \
+			linear_activation_backward(dAL, current_cache, "sigmoid")
+
+	for layer in reversed(range(layers-1)):
+	    current_cache = caches[layer]
+	    grads["dA"+str(layer)], grads["dW"+str(layer+1)], grads["db"+str(layer+1)] = \
+			linear_activation_backward(grads["dA"+str(layer+1)], current_cache, "relu")
+        
+	return grads
