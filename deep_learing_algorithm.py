@@ -132,3 +132,21 @@ def update_parameters(parameters, grads, learning_rate):
 		parameters["W"+str(layer+1)] = parameters["W"+str(layer+1)] - learning_rate*grads["dW"+str(layer+1)]
 		parameters["b"+str(layer+1)] = parameters["b"+str(layer+1)] - learning_rate*grads["db"+str(layer+1)]
 	return parameters
+
+def deep_learning_model(X, Y, layer_dims, learning_rate, num_iterations, print_cost = False):
+
+    np.random.seed(1)
+    costs = []
+    parameters = initialize_parameters(layer_dims)
+
+    for i in range(num_iterations):
+        AL, caches = model_forward(X, parameters)
+        cost = compute_cost(AL, Y, parameters)
+        grads = model_backforward(AL, Y, caches, parameters)
+        parameters = update_parameters(parameters, grads, learning_rate)
+        
+        if print_cost and i % 1000 == 0:
+            print ("Cost after iteration %i: %f" %(i, cost))
+        if print_cost and i % 1000 == 0:
+            costs.append(cost)
+    return parameters
